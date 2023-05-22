@@ -7,9 +7,14 @@ const mongoose = require("mongoose");
 // Importing utils
 const ExpressError = require("./utils/express-error");
 
+// Importing routes
+const bookRoutes = require("./routes/book-routes");
+
 // Configuring server
 const app = express();
 app.use(express.json());
+
+app.use("/api/books", bookRoutes);
 
 app.use((req, res, next) => {
     throw new ExpressError("Could not find this route.", 404);
