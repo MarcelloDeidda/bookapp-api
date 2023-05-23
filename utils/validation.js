@@ -17,7 +17,29 @@ module.exports.validateCategory = (category, next) => {
     })
 };
 
-module.exports.createBookValidator = () => {
+module.exports.bookValidator = () => {
+    return [
+        check("title")
+            .not()
+            .isEmpty(),
+        check("author")
+            .not()
+            .isEmpty(),
+        check("year")
+            .not()
+            .isAlpha()
+            .not()
+            .isEmpty(),
+        check("summary")
+            .not()
+            .isEmpty(),
+        check("imgUrl")
+            .not()
+            .isEmpty()
+    ]
+}
+
+module.exports.bookValidator = () => {
     return [
         check("title")
             .not()
