@@ -21,10 +21,10 @@ const bookSchema = new Schema({
             ref: "Review"
         }
     ],
-    createdBy: {
+    createdBy: /*{
             type: Schema.Types.ObjectId,
             ref: "User"
-        }
+        }*/ String
 });
 
 const Book = mongoose.model("Book", bookSchema);
