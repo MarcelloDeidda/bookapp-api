@@ -1,5 +1,4 @@
 // Importing mongoose models
-const place = require("../../../../mern/places/backend/models/place");
 const { sortBySurname } = require("../utils/utils");
 const Book = require("../models/book");
 const User = require("../models/book");
@@ -66,7 +65,6 @@ module.exports.getAuthors = async (req, res, next) => {
         }
 
         const [...authors] = sortBySurname(authorsList);
-        console.log(authors)
         res.status(200).json({ authors });
     } catch (e) {
         return next(new ExpressError(e.message, 500));
