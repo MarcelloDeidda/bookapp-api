@@ -1,0 +1,380 @@
+{
+	"info": {
+		"_postman_id": "4a7c21ef-f73d-45c1-a567-78a5a6d4ed2e",
+		"name": "Bookapp API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20903714"
+	},
+	"item": [
+		{
+			"name": "Create new book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const book = pm.response.json().book;\r",
+							"pm.globals.set(\"bookID\", book.id);\r",
+							"\r",
+							"pm.test(\"Status code should be 201\", () => {\r",
+							"    pm.response.to.be.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should include correct book info\", () => {\r",
+							"    pm.expect(book.title).to.eql(pm.globals.get(\"title\"));\r",
+							"    pm.expect(book.author).to.eql(pm.globals.get(\"author\"));\r",
+							"    pm.expect(book.year).to.eql(pm.globals.get(\"year\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const book = {\r",
+							"    title: \"Tales from the Café\",\r",
+							"    author: \"Toshikazu Kawaguchi\",\r",
+							"    year: 2017\r",
+							"}\r",
+							"\r",
+							"pm.globals.set(\"title\", book.title);\r",
+							"pm.globals.set(\"author\", book.author);\r",
+							"pm.globals.set(\"year\", book.year);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"{{title}}\",\r\n    \"author\": \"{{author}}\",\r\n    \"year\": {{year}},\r\n    \"summary\": \"In a small back alley in Tokyo, there is a café which has been serving carefully brewed coffee for more than one hundred years. But this coffee shop offers its customers a unique experience: the chance to travel back in time...\",\r\n    \"category\": [\r\n        \"Fiction\",\r\n        \"Contemporary\",\r\n        \"Fantasy\"\r\n    ],\r\n    \"imgUrl\": \"https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1593780745i/54373691.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/books",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for book by keyword",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const books = pm.response.json().books;\r",
+							"const bookIDs = books.map(book => book.id);\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List of books contains new book created\", () => {\r",
+							"    pm.expect(bookIDs.includes(pm.globals.get(\"bookID\"))).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/search?keyword={{title}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"search"
+					],
+					"query": [
+						{
+							"key": "keyword",
+							"value": "{{title}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all authors",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const authors = pm.response.json().authors;\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List of authors includes author of new book created\", () => {\r",
+							"    pm.expect(authors.includes(pm.globals.get(\"author\"))).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/authors",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for author",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const books = pm.response.json().books;\r",
+							"const bookIDs = books.map(book => book.id);\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"List of books by author contains new book created\", () => {\r",
+							"    pm.expect(bookIDs.includes(pm.globals.get(\"bookID\"))).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/authors/{{author}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"authors",
+						"{{author}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Edit book year",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.globals.set(\"newYear\", 2019);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const book = pm.response.json().book;\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should include correct book info\", () => {\r",
+							"    pm.expect(book.title).to.eql(pm.globals.get(\"title\"));\r",
+							"    pm.expect(book.author).to.eql(pm.globals.get(\"author\"));\r",
+							"    pm.expect(book.year).to.eql(pm.globals.get(\"newYear\"));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"{{title}}\",\r\n    \"author\": \"{{author}}\",\r\n    \"year\": {{newYear}},\r\n    \"summary\": \"In a small back alley in Tokyo, there is a café which has been serving carefully brewed coffee for more than one hundred years. But this coffee shop offers its customers a unique experience: the chance to travel back in time...\",\r\n    \"imgUrl\": \"https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1593780745i/54373691.jpg\",\r\n    \"category\": [\r\n        \"Fiction\",\r\n        \"Contemporary\",\r\n        \"Fantasy\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/api/books/{{bookID}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"{{bookID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for book by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const book = pm.response.json().book;\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should include correct book info\", () => {\r",
+							"    pm.expect(book.title).to.eql(pm.globals.get(\"title\"));\r",
+							"    pm.expect(book.author).to.eql(pm.globals.get(\"author\"));\r",
+							"    pm.expect(book.year).to.eql(pm.globals.get(\"newYear\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/{{bookID}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"{{bookID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete book",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const message = pm.response.json().message;\r",
+							"\r",
+							"pm.test(\"Status code should be 200\", () => {\r",
+							"    pm.response.to.be.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should include correct message\", () => {\r",
+							"    pm.expect(message).to.eql(\"Book successfully deleted.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/{{bookID}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"{{bookID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Search for deleted book by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const message = pm.response.json().message;\r",
+							"\r",
+							"pm.test(\"Status code should be 404\", () => {\r",
+							"    pm.response.to.be.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should include correct message\", () => {\r",
+							"    pm.expect(message).to.eql(\"Could not find this book!\");\r",
+							"});\r",
+							"\r",
+							"pm.globals.unset(\"bookID\");\r",
+							"pm.globals.unset(\"title\");\r",
+							"pm.globals.unset(\"author\");\r",
+							"pm.globals.unset(\"year\");\r",
+							"pm.globals.unset(\"newYear\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/api/books/{{bookID}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"api",
+						"books",
+						"{{bookID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

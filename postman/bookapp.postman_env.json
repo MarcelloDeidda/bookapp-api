@@ -1,0 +1,15 @@
+{
+	"id": "0a714ad1-38db-4230-b7fd-3ed2bcb38000",
+	"name": "New Environment",
+	"values": [
+		{
+			"key": "host",
+			"value": "http://localhost:5000",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2023-10-17T09:13:36.969Z",
+	"_postman_exported_using": "Postman/10.19.2-231013-1449"
+}
